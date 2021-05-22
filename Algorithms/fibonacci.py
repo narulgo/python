@@ -1,7 +1,4 @@
-
-# Функция фибоначи которая принимает одно значение
 def fib(number):
-# создание переменных и их вывод
     first_number = 1
     second_number = 1
     i = 2
@@ -13,34 +10,29 @@ def fib(number):
     if number > i:
         print(first_number)
         print(second_number)
-    # Пока i меньше значения
+    
         while i < number:
-    # Увеличиваем на 1
             i += 1
-    # Новой переменной присваеваем сумму и вывоводим
             third_number = first_number + second_number
             print(third_number)
-    # Присваеваем значения чтобы продолжить последовательность
             first_number = second_number
             second_number = third_number
 
-
-# Заполняем функцию значением
 fib(7)
 
 
+def recur_fibo(n):
+   if n <= 1:
+       return n
+   else:
+       return(recur_fibo(n-1) + recur_fibo(n-2))
 
-# Рекурсивная функция фибоначи 
-def fib(number):
-# Если значение равно или меньше 1 то возврат равен 1
-    if number <= 1: return 1
-# Во всех остальных случаях возвращается данное арифметическое выражение
-    else: return fib(number - 1) + fib(number - 2)
-
-print(fib(6))
+nterms = 10
 
 
-
-# Итеративный вывод
-for i in range(7):
-    print(fib(i))
+if nterms <= 0:
+   print("Plese enter a positive integer")
+else:
+   print("Fibonacci sequence:")
+   for i in range(nterms):
+       print(recur_fibo(i))
