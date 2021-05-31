@@ -2,7 +2,7 @@ class Vertex(object):
 
     def __init__(self, name):
         self.name = name
-        self.node = None  # !!!!
+        self.node = None
 
 
 class Node(object):
