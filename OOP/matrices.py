@@ -1,3 +1,6 @@
+from numbers import Number
+
+
 class Matrix:
     def __init__(self, rows):
         if len(set(len(row) for row in rows)) > 1:
@@ -9,39 +12,62 @@ class Matrix:
         if len(self.rows) != len(other.rows) or len(self.rows[0]) != len(other.rows[0]):
             raise ValueError("Matrix dimensions don't match")
 
-        return Matrix(
-            [
-                [a + b for a, b in zip(a_row, b_row)]
-                for a_row, b_row in zip(self.rows, other.rows)
-            ]
-        )
+        if isinstance(other, Matrix):
+            return Matrix(
+                [
+                    [a + b for a, b in zip(a_row, b_row)]
+                    for a_row, b_row in zip(self.rows, other.rows)
+                ]
+            )
+        elif isinstance(other, Number):
+            return Matrix([[item + other for item in row] for row in self.rows])
+        else:
+            raise TypeError(f"Can't add {type(other)} to Matrix")
 
     def __sub__(self, other):
         if len(self.rows) != len(other.rows) or len(self.rows[0]) != len(other.rows[0]):
             raise ValueError("Matrix dimensions don't match")
 
-        return Matrix(
-            [
-                [a - b for a, b in zip(a_row, b_row)]
-                for a_row, b_row in zip(self.rows, other.rows)
-            ]
-        )
+        if isinstance(other, Matrix):
+            return Matrix(
+                [
+                    [a - b for a, b in zip(a_row, b_row)]
+                    for a_row, b_row in zip(self.rows, other.rows)
+                ]
+            )
+        elif isinstance(other, Number):
+            return Matrix([[item - other for item in row] for row in self.rows])
+        else:
+            raise TypeError(f"Can't subtract {type(other)} from Matrix")
 
     def __mul__(self, other):
-        if not isinstance(other, Matrix):
-            raise TypeError(f"Don't know how to multiply {type(other)} with Matrix")
+        if isinstance(other, Matrix):
+            if len(self.rows[0]) != len(other.rows):
+                raise ValueError("Matrix dimensions don't match")
 
-        if len(self.rows[0]) != len(other.rows):
-            raise ValueError("Matrix dimensions don't match")
+            rows = [[0 for _ in other.rows[0]] for _ in self.rows]
 
-        rows = [[0 for _ in other.rows[0]] for _ in self.rows]
+            for i in range(len(self.rows)):
+                for j in range(len(other.rows[0])):
+                    for k in range(len(other.rows)):
+                        rows[i][j] += self.rows[i][k] * other.rows[k][j]
 
-        for i in range(len(self.rows)):
-            for j in range(len(other.rows[0])):
-                for k in range(len(other.rows)):
-                    rows[i][j] += self.rows[i][k] * other.rows[k][j]
+            return Matrix(rows)
 
-        return Matrix(rows)
+        elif isinstance(other, Number):
+            return Matrix([[item * other for item in row] for row in self.rows])
+
+        else:
+            raise TypeError(f"Can't multiply {type(other)} with Matrix")
+
+    def __eq__(self, other):
+        if isinstance(other, Matrix):
+            return self.rows == other.rows
+        return super().__eq__(other)
+
+    def __rmul__(self, other):
+        if isinstance(other, Number):
+            return self * other
 
     def __repr__(self):
         return "\n".join(str(row) for row in self.rows)
@@ -63,7 +89,6 @@ if __name__ == "__main__":
         ]
     )
     assert (m1 * m0).rows == m1.rows
-
     m2 = Matrix(
         [
             [1, 2, 3],
@@ -73,18 +98,14 @@ if __name__ == "__main__":
     )
     assert (m2 * m0).rows == m2.rows
 
-    m3 = m1 + m2
-    m4 = m1 - m2
-    m5 = m1 * m2
+    assert m1 * 2 == m1 + m1
+    assert 2 * m1 == m1 + m1
+    assert 3 * m1 == m1 + m1 + m1
 
-    m6 = Matrix(
-        [
-            [1, 2, 4, 3],
-            [3, 4, 1, 5],
-            [1, 6, 1, 3],
-        ]
-    )
-    
+    assert m2 * 2 == m2 + m2
+    assert 2 * m2 == m2 + m2
+    assert 3 * m2 == m2 + m2 + m2
+
     
     print((m2 * m0).rows)
-    
+    print(m2 * 2)
