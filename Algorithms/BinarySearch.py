@@ -18,4 +18,29 @@ def search(searchList, key):
 aList = list(range(1, 21))
 print(aList)
 print("----------")
-search(aList, 20)
+search(aList, 17)
+print("-------------------")
+
+
+def binary_iterative(elements, search_item):
+
+    left, right = 0, len(elements) - 1
+
+    while left <= right:
+
+        middle_dex = (left + right) // 2
+        middle_el = elements[middle_dex]
+
+        if middle_el == search_item:
+            return middle_dex
+        elif middle_el < search_item:
+            left = middle_dex + 1
+        elif middle_el > search_item:
+            right = middle_dex - 1
+    
+    return None
+
+aList = list(range(0, 21))
+print(aList)
+print("----------")
+print(binary_iterative(aList, 17))
